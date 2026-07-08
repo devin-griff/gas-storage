@@ -1,10 +1,10 @@
-# Fly.io config for the <APP_TITLE> Streamlit app.
-# Public URL after deploy: https://<APP_NAME>.fly.dev
+# Fly.io config for the Gas Storage Streamlit app.
+# Public URL after deploy: https://griffith-pse-gas-storage.fly.dev
 # Custom domain (set up via Cloudflare DNS, see SETUP.md):
-#   https://<APP_SLUG>.griffith-pse.com
+#   https://gas-storage.griffith-pse.com
 
-app = "<APP_NAME>"
-primary_region = "ord"  # Chicago — central US, low latency for North American users.
+app = "griffith-pse-gas-storage"
+primary_region = "ord"  # Chicago: central US, low latency for North American users.
 
 [build]
 
@@ -22,6 +22,6 @@ primary_region = "ord"  # Chicago — central US, low latency for North American
   size = "shared-cpu-1x"
   memory = "1gb"
   # Bump for compute-heavy apps:
-  #   shared-cpu-2x  / 2gb   — small ML inference, modest pyomo NLPs
-  #   performance-1x / 4gb   — moderate ML/AI workloads, big optimization
-  #   a10            / 16gb  — GPU (CUDA, large model inference)
+  #   shared-cpu-2x  / 2gb  : small ML inference, modest pyomo NLPs
+  #   performance-1x / 4gb  : moderate ML/AI workloads, big optimization
+  #   a10            / 16gb : GPU (CUDA, large model inference)

@@ -41,8 +41,8 @@ COPY app.py favicon.png ./
 # Streamlit's default index.html has no OG tags and link previews fall back
 # to a bare title.
 RUN STATIC=$(python -c "import streamlit, os; print(os.path.join(os.path.dirname(streamlit.__file__), 'static'))") \
-    && sed -i 's|<title>Streamlit</title>|<title><APP_TITLE></title>|' "$STATIC/index.html" \
-    && sed -i 's|</head>|<link rel="icon" type="image/png" href="./favicon.png"/><meta property="og:type" content="website"/><meta property="og:title" content="<APP_TITLE>"/><meta property="og:description" content="<APP_TAGLINE>"/><meta property="og:image" content="https://griffith-pse.com/images/<APP_SLUG>.png"/><meta property="og:site_name" content="Griffith PSE"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="<APP_TITLE>"/><meta name="twitter:description" content="<APP_TAGLINE>"/><meta name="twitter:image" content="https://griffith-pse.com/images/<APP_SLUG>.png"/></head>|' "$STATIC/index.html" \
+    && sed -i 's|<title>Streamlit</title>|<title>Gas Storage</title>|' "$STATIC/index.html" \
+    && sed -i 's|</head>|<link rel="icon" type="image/png" href="./favicon.png"/><meta property="og:type" content="website"/><meta property="og:title" content="Gas Storage"/><meta property="og:description" content="Storage lease valuation: intrinsic LP + rolling-intrinsic Monte Carlo"/><meta property="og:image" content="https://griffith-pse.com/images/gas-storage.png"/><meta property="og:site_name" content="Griffith PSE"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Gas Storage"/><meta name="twitter:description" content="Storage lease valuation: intrinsic LP + rolling-intrinsic Monte Carlo"/><meta name="twitter:image" content="https://griffith-pse.com/images/gas-storage.png"/></head>|' "$STATIC/index.html" \
     && cp /app/favicon.png "$STATIC/favicon.png" && cp /app/favicon.png "$STATIC/favicon.ico"
 
 # Run as a non-root user. If a future Streamlit (or transitive dep) RCE

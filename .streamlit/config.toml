@@ -1,6 +1,6 @@
 # Defaults for any Streamlit app cloned from this template.
 # Copying these into the repo means a fresh `streamlit run app.py` works
-# without prompting for an email or printing setup nags — both locally
+# without prompting for an email or printing setup nags: both locally
 # and in the Docker image.
 
 [browser]

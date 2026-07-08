@@ -1,0 +1,27 @@
+# Fly.io config for the <APP_TITLE> Streamlit app.
+# Public URL after deploy: https://<APP_NAME>.fly.dev
+# Custom domain (set up via Cloudflare DNS, see SETUP.md):
+#   https://<APP_SLUG>.griffith-pse.com
+
+app = "<APP_NAME>"
+primary_region = "ord"  # Chicago — central US, low latency for North American users.
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"     # suspend when idle (no traffic ~5 min) → $0 while idle
+  auto_start_machines = true      # wake on incoming request (~3-5 s cold start)
+  min_machines_running = 0        # the machine may sleep when idle (no min running)
+
+  # Streamlit uses WebSockets for live UI updates; http_service handles them
+  # automatically, no extra config needed.
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"
+  # Bump for compute-heavy apps:
+  #   shared-cpu-2x  / 2gb   — small ML inference, modest pyomo NLPs
+  #   performance-1x / 4gb   — moderate ML/AI workloads, big optimization
+  #   a10            / 16gb  — GPU (CUDA, large model inference)

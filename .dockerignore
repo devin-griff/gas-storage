@@ -1,0 +1,12 @@
+# Keep the Docker image lean — exclude things only used at dev/build time.
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.ipynb
+.git/
+.gitignore
+.venv/
+venv/
+README.md
+SETUP.md
+fly.toml

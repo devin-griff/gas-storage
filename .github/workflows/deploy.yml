@@ -1,0 +1,64 @@
+# Auto-deploy to Fly.io on every push to main.
+# Identical workflow used across all Griffith PSE Streamlit app repos.
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches: [main]
+    # Skip CI on docs-only changes — README/SETUP edits don't enter the
+    # Docker image, so the resulting deploy would be a byte-identical no-op.
+    # Use `workflow_dispatch` below to force a deploy if you ever need one.
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  # Lets you trigger a deploy manually from the Actions tab without a code change.
+  workflow_dispatch:
+
+# Opt JavaScript actions (e.g. actions/checkout) into Node 24 ahead of GitHub's
+# forced switch on June 2 2026. Without this, the runner prints a deprecation
+# warning every build until then.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  # If a new push happens while a deploy is running, queue the new one rather
+  # than cancelling the in-progress one (cancelling mid-deploy can leave the
+  # app in a half-updated state).
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    steps:
+      # Skip the deploy when FLY_API_TOKEN isn't set yet (e.g. fresh repos
+      # cloned from this template before SETUP.md steps 4-5 are completed).
+      # Avoids noisy "deploy failed" emails during the bootstrap phase.
+      # GitHub doesn't allow `secrets.*` directly in `if:` conditions, so
+      # we copy presence-of-token into an env var and gate later steps on it.
+      - name: Check for Fly deploy token
+        id: token
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "::notice::FLY_API_TOKEN not set on this repo; skipping deploy. Complete SETUP.md step 5 to enable."
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout source
+        if: steps.token.outputs.has_token == 'true'
+        uses: actions/checkout@v4
+
+      - name: Install flyctl
+        if: steps.token.outputs.has_token == 'true'
+        uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # v1.6
+
+      - name: Deploy
+        if: steps.token.outputs.has_token == 'true'
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

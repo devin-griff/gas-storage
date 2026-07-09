@@ -779,6 +779,9 @@ if mc_btn:
                                        _cw, progress=bar)
     _overlay.empty()
     st.session_state.mc = (pnl, inv_paths)
+    # Fresh results open on the best path; runs before the selector widget
+    # is instantiated this rerun, so the state write is allowed.
+    st.session_state.path_sel = "best"
 
 intrinsic = st.session_state.intrinsic
 mc = st.session_state.mc

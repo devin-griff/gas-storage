@@ -617,7 +617,7 @@ def pnl_chart(pnl, intrinsic_value, sel_value=None):
     rules = pd.DataFrame({
         "x": [intrinsic_value, float(np.mean(pnl))]
              + ([sel_value] if sel_value is not None else []),
-        "label": ["intrinsic", "rolling intrinsic"]
+        "label": ["intrinsic", "avg rolling intrinsic"]
                  + (["highlighted path"] if sel_value is not None else []),
         "color": [COLOR_FORWARD, COLOR_ROLLING]
                  + ([COLOR_SELECTED] if sel_value is not None else []),
@@ -805,10 +805,10 @@ with tab_val:
             COLOR_FORWARD if iv is not None else "inherit")
     if mc and iv is not None:
         rv = float(np.mean(mc[0]))
-        _metric(m2, "Rolling intrinsic (k$)", f"{rv:,.0f}", COLOR_ROLLING)
+        _metric(m2, "Avg rolling intrinsic (k$)", f"{rv:,.0f}", COLOR_ROLLING)
         _metric(m3, "Extrinsic uplift (k$)", f"+{rv - iv:,.0f}")
     else:
-        _metric(m2, "Rolling intrinsic (k$)", "-")
+        _metric(m2, "Avg rolling intrinsic (k$)", "-")
         _metric(m3, "Extrinsic uplift (k$)", "-")
 
     sel_path = None
